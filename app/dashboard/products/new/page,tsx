@@ -1,0 +1,195 @@
+export default function NewProductPage() {
+  return (
+    <main className="bg-background min-h-screen">
+      <div className="bg-primary py-10 px-6">
+        <div className="max-w-4xl mx-auto">
+          
+            href="/dashboard"
+            className="text-secondary opacity-70 hover:opacity-100 text-sm transition-opacity inline-block mb-4"
+          >
+            ← Back to Dashboard
+          </a>
+          <h1 className="font-playfair text-3xl font-bold text-secondary">
+            Add New Product
+          </h1>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-6 py-10">
+        <form className="space-y-8">
+
+          <div className="bg-white rounded-xl border border-gray-100 p-8">
+            <h2 className="font-playfair text-xl font-bold text-dark mb-6">
+              Product Information
+            </h2>
+            <div className="space-y-5">
+
+              <div>
+                <label className="block text-sm font-bold text-dark mb-2">
+                  Product Name *
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Handmade Silver Ring"
+                  className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-dark mb-2">
+                  Description *
+                </label>
+                <textarea
+                  rows={5}
+                  placeholder="Describe your product in detail..."
+                  className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary resize-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-bold text-dark mb-2">
+                    Category *
+                  </label>
+                  <select className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary">
+                    <option value="">Select a category</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="pottery">Pottery</option>
+                    <option value="textiles">Textiles</option>
+                    <option value="woodwork">Woodwork</option>
+                    <option value="paintings">Paintings</option>
+                    <option value="candles">Candles</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-dark mb-2">
+                    Price ($) *
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                    className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-bold text-dark mb-2">
+                    Stock Quantity *
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="0"
+                    min="0"
+                    className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-dark mb-2">
+                    SKU / Product Code
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. RING-001"
+                    className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
+                  />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-100 p-8">
+            <h2 className="font-playfair text-xl font-bold text-dark mb-6">
+              Product Images
+            </h2>
+            <div className="border-2 border-dashed border-gray-200 rounded-xl p-10 text-center hover:border-primary transition-colors cursor-pointer">
+              <span className="text-5xl block mb-4">📷</span>
+              <p className="text-dark font-bold text-sm mb-2">
+                Drag and drop your images here
+              </p>
+              <p className="text-gray-400 text-xs mb-4">
+                PNG, JPG, WEBP up to 10MB each
+              </p>
+              <button
+                type="button"
+                className="bg-secondary text-primary px-6 py-2 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
+              >
+                Browse Files
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-100 p-8">
+            <h2 className="font-playfair text-xl font-bold text-dark mb-6">
+              Shipping Information
+            </h2>
+            <div className="space-y-5">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-bold text-dark mb-2">
+                    Weight (kg)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                    className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-dark mb-2">
+                    Processing Time
+                  </label>
+                  <select className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary">
+                    <option>1-2 business days</option>
+                    <option>3-5 business days</option>
+                    <option>1-2 weeks</option>
+                    <option>2-4 weeks</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                  <input type="checkbox" className="accent-primary" />
+                  This product offers free shipping
+                </label>
+              </div>
+
+            </div>
+          </div>
+
+          <div className="flex gap-4 justify-end">
+            
+              href="/dashboard"
+              className="border border-gray-200 text-dark px-8 py-3 rounded-full text-sm font-bold hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </a>
+            <button
+              type="button"
+              className="border border-primary text-primary px-8 py-3 rounded-full text-sm font-bold hover:bg-primary hover:text-secondary transition-colors"
+            >
+              Save as Draft
+            </button>
+            <button
+              type="submit"
+              className="bg-primary text-secondary px-8 py-3 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
+            >
+              Publish Product
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </main>
+  );
+}
