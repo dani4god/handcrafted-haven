@@ -1,8 +1,47 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+
 export default function LoginPage() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    const result = await signIn('credentials', {
+      email: formData.email,
+      password: formData.password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError('Invalid email or password');
+      setLoading(false);
+      return;
+    }
+
+    router.push('/dashboard');
+    router.refresh();
+  }
+
   return (
     <main className="bg-background min-h-screen flex items-center justify-center px-6 py-16">
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-10 w-full max-w-md">
-        
+
         <div className="text-center mb-8">
           <h1 className="font-playfair text-3xl font-bold text-dark mb-2">
             Welcome Back
@@ -12,13 +51,23 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form className="space-y-5">
+        {error && (
+          <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-bold text-dark mb-2">
               Email Address
             </label>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
               placeholder="you@example.com"
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
             />
@@ -30,6 +79,10 @@ export default function LoginPage() {
             </label>
             <input
               type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
               placeholder="••••••••"
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
             />
@@ -47,9 +100,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-primary text-secondary py-3 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
+            disabled={loading}
+            className="w-full bg-primary text-secondary py-3 rounded-full text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
@@ -60,25 +114,6 @@ export default function LoginPage() {
               Sign up
             </a>
           </p>
-        </div>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-100"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-gray-400">or continue with</span>
-            </div>
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            <button className="border border-gray-200 rounded-full py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-              Google
-            </button>
-            <button className="border border-gray-200 rounded-full py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-              Facebook
-            </button>
-          </div>
         </div>
 
       </div>

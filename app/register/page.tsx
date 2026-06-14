@@ -1,4 +1,66 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 export default function RegisterPage() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    role: 'buyer',
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong');
+        setLoading(false);
+        return;
+      }
+
+      router.push('/login');
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+      setLoading(false);
+    }
+  }
+
   return (
     <main className="bg-background min-h-screen flex items-center justify-center px-6 py-16">
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-10 w-full max-w-md">
@@ -12,7 +74,13 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <form className="space-y-5">
+        {error && (
+          <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-bold text-dark mb-2">
@@ -20,6 +88,10 @@ export default function RegisterPage() {
               </label>
               <input
                 type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
                 placeholder="John"
                 className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
               />
@@ -30,6 +102,10 @@ export default function RegisterPage() {
               </label>
               <input
                 type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
                 placeholder="Doe"
                 className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
               />
@@ -42,6 +118,10 @@ export default function RegisterPage() {
             </label>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
               placeholder="you@example.com"
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
             />
@@ -53,6 +133,11 @@ export default function RegisterPage() {
             </label>
             <input
               type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              minLength={6}
               placeholder="••••••••"
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
             />
@@ -64,6 +149,11 @@ export default function RegisterPage() {
             </label>
             <input
               type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              minLength={6}
               placeholder="••••••••"
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
             />
@@ -73,7 +163,12 @@ export default function RegisterPage() {
             <label className="block text-sm font-bold text-dark mb-2">
               I want to
             </label>
-            <select className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary">
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm text-dark focus:outline-none focus:border-primary"
+            >
               <option value="buyer">Shop for handcrafted items</option>
               <option value="seller">Sell my handcrafted items</option>
               <option value="both">Both</option>
@@ -82,7 +177,7 @@ export default function RegisterPage() {
 
           <div>
             <label className="flex items-start gap-2 text-sm text-gray-500 cursor-pointer">
-              <input type="checkbox" className="accent-primary mt-1" />
+              <input type="checkbox" required className="accent-primary mt-1" />
               <span>
                 I agree to the{' '}
                 <a href="/terms" className="text-accent hover:opacity-80">
@@ -98,9 +193,10 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full bg-primary text-secondary py-3 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
+            disabled={loading}
+            className="w-full bg-primary text-secondary py-3 rounded-full text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
-            Create Account
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
@@ -111,25 +207,6 @@ export default function RegisterPage() {
               Sign in
             </a>
           </p>
-        </div>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-100"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-gray-400">or continue with</span>
-            </div>
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            <button className="border border-gray-200 rounded-full py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-              Google
-            </button>
-            <button className="border border-gray-200 rounded-full py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-              Facebook
-            </button>
-          </div>
         </div>
 
       </div>

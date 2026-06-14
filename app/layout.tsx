@@ -3,6 +3,7 @@ import { Playfair_Display, Lato } from 'next/font/google';
 import './globals.css';
 import Navbar from './components/navbar/navbar';
 import Footer from './components/footer/Footer';
+import AuthProvider from './components/providers/SessionProvider';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -28,9 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${playfair.variable} ${lato.variable} font-lato`}>
-        <Navbar />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
